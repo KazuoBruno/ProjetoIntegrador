@@ -28,7 +28,37 @@ model = tf.keras.Model(inputs, outputs)
 st.title("Prevendo tanana")
 st.divider()
 
-var1 = st.number_input("Digite um numero")
+vLat = st.number_input("Digite a Latitude")
+vLon = st.number_input("Digite a Longitude")
+vMin = st.text_input("Digite a hora e o minuto")
+vBai = st.text_input("Digite o bairro")
+vAno = st.number_input("Digite o Mes")
+vMes = st.number_input("Digite o Ano")
 
-if var1 == 1:
-    st.write("bruno eh legal")
+
+valores = [[]]
+
+if len(valores[[0]]) != 0:
+    
+    valores[0].append(float(vLat))
+    valores[0].append(float(vLon))
+    valores[0].append(int(vMin))
+    vMinFin = (int(vMin[:2]) * 60) + int(vMin[4:])
+    bairros = ['BA_BRONX', 'BA_BROOKLYN', 'BA_MANHATTAN', 'BA_QUEENS', 'BA_STATEN ISLAND']	
+
+    for i in range(len(bairros)):
+        if vBai in bairros[i]:
+            valores[0].append(1)
+        else:
+            valores[0].append(0)
+
+    valores[0].append(int(vMes))
+    valores[0].append(int(vAno))
+    valores = valores.astype(np.float64)
+    #  Fazendo previsões
+    predictions = model.predict(valores)
+
+    # Exibindo previsões
+    for i, prediction in enumerate(predictions):
+        predicted_class = np.argmax(prediction)
+        st.write(f"Classe Prevista: {predicted_class}")
