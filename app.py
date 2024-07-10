@@ -25,25 +25,24 @@ outputs = tf.keras.layers.Dense(4, activation='softmax')(x)
 
 model = tf.keras.Model(inputs, outputs)
 
-st.title("Prevendo tanana")
+st.title("Prevendo Grau do Acidente")
 st.divider()
 
 vLat = st.number_input("Digite a Latitude")
 vLon = st.number_input("Digite a Longitude")
 vMin = st.text_input("Digite a hora e o minuto")
 vBai = st.text_input("Digite o bairro")
-vAno = st.number_input("Digite o Mes")
-vMes = st.number_input("Digite o Ano")
-
+vMes = st.number_input("Digite o Mes")
+vAno = st.number_input("Digite o Ano")
 
 valores = [[]]
 
-if len(valores[[0]]) != 0:
-    
+if st.button("Calcular"):
+
     valores[0].append(float(vLat))
     valores[0].append(float(vLon))
-    valores[0].append(int(vMin))
     vMinFin = (int(vMin[:2]) * 60) + int(vMin[4:])
+    valores[0].append(int(vMinFin))
     bairros = ['BA_BRONX', 'BA_BROOKLYN', 'BA_MANHATTAN', 'BA_QUEENS', 'BA_STATEN ISLAND']	
 
     for i in range(len(bairros)):
@@ -54,7 +53,12 @@ if len(valores[[0]]) != 0:
 
     valores[0].append(int(vMes))
     valores[0].append(int(vAno))
+    st.write(valores)
+    valores = pd.DataFrame(valores, columns=['LATITUDE', 'LONGITUDE', 'Minutos_Total', 'BA_BRONX', 'BA_BROOKLYN',
+       'BA_MANHATTAN', 'BA_QUEENS', 'BA_STATEN ISLAND', 'Start_Time_Month',
+       'Start_Time_Year'])
     valores = valores.astype(np.float64)
+    valores = scaler.transform(valores)
     #  Fazendo previsões
     predictions = model.predict(valores)
 
